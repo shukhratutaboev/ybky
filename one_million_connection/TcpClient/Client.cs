@@ -4,11 +4,11 @@ using System.Text;
 
 public class Client
 {
-    public static async Task ConnectToServer(int port)
+    public static async Task ConnectToServer(int port, int ip)
     {
         Console.WriteLine($"Connecting to server on port {port}...");
-        string serverIP = "127.0.0.8";
-        string clientIp = "127.0.0.9";
+        string serverIP = $"127.0.0.{ip}";
+        string clientIp = $"127.0.0.{ip+1}";
         try
         {
             Socket clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);

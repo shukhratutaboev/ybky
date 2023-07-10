@@ -1,17 +1,20 @@
 ﻿// var i = 8080;
-var tasks = new List<Thread>();
-for (var i = 1000; i < 50000; i++)
+for (var k = 0; k < 2; k++)
 {
-    Console.WriteLine($"Starting server on port {i}...");
-    var port = i;
-    var task = new Thread(() => Server.CreateServer(port));
-    tasks.Add(task);
-}
+    var tasks = new List<Thread>();
+    for (var i = 10000; i <= 60000; i++)
+    {
+        Console.WriteLine($"Starting server on port {i}...");
+        var port = i;
+        var task = new Thread(() => Server.CreateServer(port, k));
+        tasks.Add(task);
+    }
 
-// Parallel.ForEach(tasks, task => task.Start());
-foreach (var task in tasks)
-{
-    task.Start();
+    // Parallel.ForEach(tasks, task => task.Start());
+    foreach (var task in tasks)
+    {
+        task.Start();
+    }
 }
 
 Console.WriteLine("Servers started. Ok");

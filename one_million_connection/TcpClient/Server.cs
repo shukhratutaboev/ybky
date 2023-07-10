@@ -4,9 +4,10 @@ using System.Text;
 
 public class Server
 {
-    public static void CreateServer(int port)
+    public static void CreateServer(int port, int k)
     {
-        var serverIP = "127.0.0.8";
+        var ip = 3 + 2 * k;
+        var serverIP = $"127.0.0.{ip}";
 
         TcpListener listener = new TcpListener(IPAddress.Parse(serverIP), port);
 
@@ -15,7 +16,7 @@ public class Server
             // Start listening for client connections
             listener.Start();
 
-            Client.ConnectToServer(port);
+            Client.ConnectToServer(port, ip);
 
             Console.WriteLine("Server started! Port: {0}", port);
 
