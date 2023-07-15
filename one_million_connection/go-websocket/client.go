@@ -26,10 +26,10 @@ Example usage: ./client -ip=172.17.0.1 -conn=10
 	}
 	flag.Parse()
 
-	u := url.URL{Scheme: "ws", Host: *ip + ":8000", Path: "/"}
+	u := url.URL{Scheme: "ws", Host: "127.0.0.1/" + *ip, Path: "/"}
 	log.Printf("Connecting to %s", u.String())
 
-	tts := time.Second
+	tts := time.Second * 5
 
 	for i := 0; i < *connections; i++ {
 		go createWebSocketConnection(u.String(), i, tts)
@@ -61,7 +61,7 @@ func createWebSocketConnection(url string, connIndex int, tts time.Duration) {
 			break
 		}
 
-		err := c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf("Hello from conn %v", connIndex)))
+		err := c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf("Hello %v", connIndex)))
 		if err != nil {
 			fmt.Printf("Failed to send message from Conn %d: %v\n", connIndex, err)
 			break

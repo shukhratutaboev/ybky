@@ -7,4 +7,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="websocketsharp" Version="1.0.3-rc11" />
+  </ItemGroup>
+
 </Project>

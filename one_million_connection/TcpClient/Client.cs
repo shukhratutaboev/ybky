@@ -7,7 +7,7 @@ public class Client
     public static async Task ConnectToServer(int port, int ip)
     {
         Console.WriteLine($"Connecting to server on port {port}...");
-        string serverIP = $"127.0.0.{ip}";
+        string serverIP = $"127.0.0.1";
         string clientIp = $"127.0.0.{ip+1}";
         try
         {
@@ -17,7 +17,7 @@ public class Client
             clientSocket.Bind(new IPEndPoint(IPAddress.Parse(clientIp), port));
 
             // Connect to the server
-            clientSocket.Connect(serverIP, port);
+            clientSocket.Connect(serverIP, 8000);
 
             Console.WriteLine("Connected to the server! Port: {0}", port);
 

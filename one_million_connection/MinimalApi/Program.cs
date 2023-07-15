@@ -1,5 +1,4 @@
 using System.Net;
-using System.Net.Sockets;
 using System.Text;
 using System.Net.WebSockets;
 
@@ -14,7 +13,7 @@ app.MapGet("/", async context =>
         {
             while (true)
             {
-                await webSocket.SendAsync(Encoding.ASCII.GetBytes($"Test - {DateTime.Now}"), WebSocketMessageType.Text, true, CancellationToken.None);
+                await webSocket.SendAsync(Encoding.ASCII.GetBytes("1"), WebSocketMessageType.Text, true, CancellationToken.None);
                 await Task.Delay(1000);
             }
         }
