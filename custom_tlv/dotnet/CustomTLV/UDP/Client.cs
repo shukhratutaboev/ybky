@@ -9,7 +9,7 @@ public class Client
 
     public Client()
     {
-        _client = new UdpClient("127.0.0.2", 0);
+        _client = new UdpClient();
     }
 
     public async Task SendAsync<T>(T data, string ip, int port)

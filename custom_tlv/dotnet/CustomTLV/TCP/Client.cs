@@ -9,7 +9,7 @@ public class Client
 
     public Client(string ip, int port)
     {
-        _client = new TcpClient("127.0.0.2", 0);
+        _client = new TcpClient();
         _client.Connect(ip, port);
         _stream = _client.GetStream();
     }
