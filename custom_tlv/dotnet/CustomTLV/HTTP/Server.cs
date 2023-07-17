@@ -1,6 +1,7 @@
 using System.Net;
 using System.Text;
 using System.Text.Json;
+using System;
 
 namespace CustomTLV.HTTP;
 
@@ -14,30 +15,31 @@ public class Server
         _listener.Prefixes.Add($"http://{ip}:{port}/");
     }
 
-    public void Start()
+    public async Task StartAsync()
     {
         _listener.Start();
+        Console.WriteLine("HTTP server started. Listening for incoming connections...");
         while (true)
         {
-            var context = _listener.GetContext();
+            var context = await _listener.GetContextAsync();
 
             Console.WriteLine("Client connected.");
 
-            Task.Run(() => HandleClient(context));
+            _ = Task.Run(async () => await HandleClientAsync(context));
         }
     }
 
-    public void Stop()
+    public async Task StopAsync()
     {
         _listener.Stop();
     }
 
-    private void HandleClient(HttpListenerContext context)
+    private static async Task HandleClientAsync(HttpListenerContext context)
     {
         var request = context.Request;
         var response = context.Response;
 
-        var requestBody = ReadStream(request.InputStream);
+        var requestBody = await ReadStreamAsync(request.InputStream);
         var requestData = Encoding.UTF8.GetString(requestBody);
         var recievedObject = JsonSerializer.Deserialize<Person>(requestData);
 
@@ -57,15 +59,15 @@ public class Server
         response.ContentLength64 = responseData.Length;
         response.StatusCode = 200;
 
-        response.OutputStream.Write(responseData, 0, responseData.Length);
+        await response.OutputStream.WriteAsync(responseData);
         response.OutputStream.Close();
         response.Close();
     }
 
-    private byte[] ReadStream(Stream stream)
+    private static async Task<byte[]> ReadStreamAsync(Stream stream)
     {
         using var memoryStream = new MemoryStream();
-        stream.CopyTo(memoryStream);
+        await stream.CopyToAsync(memoryStream);
         return memoryStream.ToArray();
     }
 }

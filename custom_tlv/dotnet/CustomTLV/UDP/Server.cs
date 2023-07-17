@@ -12,30 +12,29 @@ public class Server
         _client = new UdpClient(new IPEndPoint(IPAddress.Parse(ip), port));
     }
 
-    public void Start()
+    public async Task StartAsync()
     {
-        Console.WriteLine("Server started. Listening for incoming connections...");
+        Console.WriteLine("UDP server started. Listening for incoming connections...");
 
         while (true)
         {
-            var client = new IPEndPoint(IPAddress.Any, 0);
-            var message = _client.Receive(ref client);
+            var message = await _client.ReceiveAsync();
             Console.WriteLine("Client connected.");
 
-            Task.Run(() => HandleClient(client, message));
+            _ = Task.Run(async () => await HandleClientAsync(message.RemoteEndPoint, message.Buffer));
         }
     }
 
-    public void Stop()
+    public async Task StopAsync()
     {
         _client.Close();
     }
 
-    private void HandleClient(IPEndPoint client, byte[] message)
+    private async Task HandleClientAsync(IPEndPoint client, byte[] message)
     {
-        var record = TLV.ReadFromByte(message);
+        var record = await TLV.ReadFromByteAsync(message);
 
-        var person = TLV.Decode<Person>(record.Value);
+        var person = await TLV.DecodeAsync<Person>(record.Value);
 
         Console.WriteLine($"Received person: {person.FirstName} {person.LastName} ({person.Age})");
 
@@ -46,10 +45,10 @@ public class Server
             Age = person.Age + 1
         };
 
-        var value = TLV.Encode(response);
+        var value = await TLV.EncodeAsync(response);
         var responseRecord = new TLVRecord(1, (ushort)value.Length, value);
 
-        var responseMessage = TLV.WriteToByte(responseRecord);
+        var responseMessage = await TLV.WriteToByteAsync(responseRecord);
 
         _client.Send(responseMessage, responseMessage.Length, client);
     }

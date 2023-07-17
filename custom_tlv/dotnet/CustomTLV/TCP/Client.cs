@@ -9,27 +9,27 @@ public class Client
 
     public Client(string ip, int port)
     {
-        _client = new TcpClient();
+        _client = new TcpClient("127.0.0.2", 0);
         _client.Connect(ip, port);
         _stream = _client.GetStream();
     }
 
-    public void Send<T>(T data)
+    public async Task SendAsync<T>(T data)
     {
-        var value = TLV.Encode(data);
+        var value = await TLV.EncodeAsync(data);
         var record = new TLVRecord(1, (ushort)value.Length, value);
 
-        TLV.WriteRecord(_stream, record);
+        await TLV.WriteRecordAsync(_stream, record);
     }
 
-    public T Receive<T>()
+    public async Task<T> ReceiveAsync<T>()
     {
-        var record = TLV.ReadRecord(_stream);
+        var record = await TLV.ReadRecordAsync(_stream);
 
-        return TLV.Decode<T>(record.Value);
+        return await TLV.DecodeAsync<T>(record.Value);
     }
 
-    public void Close()
+    public async Task CloseAsync()
     {
         _stream.Close();
         _client.Close();

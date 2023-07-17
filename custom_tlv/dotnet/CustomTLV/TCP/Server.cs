@@ -12,26 +12,26 @@ public class Server
         _listener = new TcpListener(IPAddress.Parse(ip), port);
     }
 
-    public void Start()
+    public async Task StartAsync()
     {
         _listener.Start();
-        Console.WriteLine("Server started. Listening for incoming connections...");
+        Console.WriteLine("TCP server started. Listening for incoming connections...");
 
         while (true)
         {
-            var client = _listener.AcceptTcpClient();
+            var client = await _listener.AcceptTcpClientAsync();
             Console.WriteLine("Client connected.");
 
-            Task.Run(() => HandleClient(client));
+            _ = Task.Run(async () => await HandleClientAsync(client));
         }
     }
 
-    public void Stop()
+    public async Task StopAsync()
     {
         _listener.Stop();
     }
 
-    private void HandleClient(TcpClient client)
+    private async Task HandleClientAsync(TcpClient client)
     {
         var stream = client.GetStream();
 
@@ -42,14 +42,14 @@ public class Server
                 if (client.Client.Poll(0, SelectMode.SelectRead))
                 {
                     byte[] buff = new byte[1];
-                    if (client.Client.Receive(buff, SocketFlags.Peek) == 0)
+                    if (await client.Client.ReceiveAsync(buff, SocketFlags.Peek) == 0)
                         break;
                 }
                 if (stream.DataAvailable)
                 {
-                    var record = TLV.ReadRecord(stream);
+                    var record = await TLV.ReadRecordAsync(stream);
 
-                    var person = TLV.Decode<Person>(record.Value);
+                    var person = await TLV.DecodeAsync<Person>(record.Value);
 
                     Console.WriteLine($"Received person: {person.FirstName} {person.LastName} ({person.Age})");
 
@@ -60,10 +60,10 @@ public class Server
                         Age = person.Age + 1
                     };
 
-                    var value = TLV.Encode(response);
+                    var value = await TLV.EncodeAsync(response);
                     var responseRecord = new TLVRecord(1, (ushort)value.Length, value);
 
-                    TLV.WriteRecord(stream, responseRecord);
+                    await TLV.WriteRecordAsync(stream, responseRecord);
 
                     Console.WriteLine($"Sent person: {response.FirstName} {response.LastName} ({response.Age})");
                 }

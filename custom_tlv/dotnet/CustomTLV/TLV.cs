@@ -1,37 +1,36 @@
 using System.Net.Sockets;
 using System.Runtime.Serialization.Formatters.Binary;
+using System;
 
 namespace CustomTLV;
 
 public static class TLV
 {
-    private static BinaryFormatter _formatter = new BinaryFormatter();
+    private static readonly BinaryFormatter _formatter = new();
 
-    public static TLVRecord ReadRecord(NetworkStream stream)
+    public static async Task<TLVRecord> ReadRecordAsync(NetworkStream stream)
     {
         var typeBuffer = new byte[1];
-        stream.Read(typeBuffer, 0, 1);
+        _ = await stream.ReadAsync(typeBuffer.AsMemory(0, 1));
         var type = typeBuffer[0];
         var lengthBuffer = new byte[2];
-        stream.Read(lengthBuffer, 0, 2);
+        _ = await stream.ReadAsync(lengthBuffer.AsMemory(0, 2));
         var length = BitConverter.ToUInt16(lengthBuffer, 0);
         var value = new byte[length];
-        stream.Read(value, 0, length);
-        // Console.WriteLine($"Read type {type} with length {length} and value {BitConverter.ToString(value)}");
+        _ = await stream.ReadAsync(value.AsMemory(0, length));
         return new TLVRecord(type, length, value);
     }
 
-    public static void WriteRecord(NetworkStream stream, TLVRecord record)
+    public static async Task WriteRecordAsync(NetworkStream stream, TLVRecord record)
     {
         var typeBuffer = new byte[1]{ record.Type };
-        stream.Write(typeBuffer, 0, 1);
+        await stream.WriteAsync(typeBuffer.AsMemory(0, 1));
         var lengthBuffer = BitConverter.GetBytes(record.Length);
-        stream.Write(lengthBuffer, 0, 2);
-        stream.Write(record.Value, 0, record.Length);
-        // Console.WriteLine($"Wrote type {record.Type} with length {record.Length} and value {BitConverter.ToString(record.Value)}");
+        await stream.WriteAsync(lengthBuffer.AsMemory(0, 2));
+        await stream.WriteAsync(record.Value.AsMemory(0, record.Length));
     }
 
-    public static byte[] WriteToByte(TLVRecord record)
+    public static async Task<byte[]> WriteToByteAsync(TLVRecord record)
     {
         var typeBuffer = new byte[] { record.Type };
         var lengthBuffer = BitConverter.GetBytes(record.Length);
@@ -44,7 +43,7 @@ public static class TLV
         return value;
     }
 
-    public static TLVRecord ReadFromByte(byte[] data)
+    public static async Task<TLVRecord> ReadFromByteAsync(byte[] data)
     {
         var type = data[0];
         var length = BitConverter.ToUInt16(data, 1);
@@ -53,16 +52,16 @@ public static class TLV
         return new TLVRecord(type, length, value);
     }
 
-    public static byte[] Encode<T>(T data)
+    public static async Task<byte[]> EncodeAsync<T>(T data)
     {
-        using var stream = new System.IO.MemoryStream();
+        using var stream = new MemoryStream();
         _formatter.Serialize(stream, data);
         return stream.ToArray();
     }
 
-    public static T Decode<T>(byte[] data)
+    public static async Task<T> DecodeAsync<T>(byte[] data)
     {
-        using var stream = new System.IO.MemoryStream(data);
+        using var stream = new MemoryStream(data);
         return (T)_formatter.Deserialize(stream);
     }
 }
