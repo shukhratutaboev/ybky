@@ -8,6 +8,12 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
+    <EnablePreviewFeatures>True</EnablePreviewFeatures>
   </PropertyGroup>
+
+  <ItemGroup>
+    <RuntimeHostConfigurationOption Value="true"
+      Include="System.Net.SocketsHttpHandler.Http3Support" />
+  </ItemGroup>
 
 </Project>

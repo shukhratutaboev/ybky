@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.002.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomTLV", "CustomTLV\CustomTLV.csproj", "{68E843A1-503F-4137-B5E3-71F816AB5C58}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TLVClient", "TLVClient\TLVClient.csproj", "{5C2E218A-38BB-4444-AB03-255C917ED24B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TLVServer", "TLVServer\TLVServer.csproj", "{52341F02-1791-4821-AE3F-5A5E6792C09D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{68E843A1-503F-4137-B5E3-71F816AB5C58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68E843A1-503F-4137-B5E3-71F816AB5C58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68E843A1-503F-4137-B5E3-71F816AB5C58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68E843A1-503F-4137-B5E3-71F816AB5C58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C2E218A-38BB-4444-AB03-255C917ED24B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C2E218A-38BB-4444-AB03-255C917ED24B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C2E218A-38BB-4444-AB03-255C917ED24B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C2E218A-38BB-4444-AB03-255C917ED24B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52341F02-1791-4821-AE3F-5A5E6792C09D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52341F02-1791-4821-AE3F-5A5E6792C09D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52341F02-1791-4821-AE3F-5A5E6792C09D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52341F02-1791-4821-AE3F-5A5E6792C09D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {116C092E-D98A-4736-A852-58F6024AAFE5}
+	EndGlobalSection
+EndGlobal

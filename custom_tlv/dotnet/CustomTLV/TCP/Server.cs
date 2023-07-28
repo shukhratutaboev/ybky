@@ -31,7 +31,7 @@ public class Server
         _listener.Stop();
     }
 
-    private async Task HandleClientAsync(TcpClient client)
+    private static async Task HandleClientAsync(TcpClient client)
     {
         var stream = client.GetStream();
 

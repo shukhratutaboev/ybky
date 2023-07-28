@@ -46,7 +46,24 @@
 //     client.Dispose();
 // }
 
-using BenchmarkDotNet.Running;
-using TLVClient;
+// using BenchmarkDotNet.Running;
+// using TLVClient;
 
-BenchmarkRunner.Run<ProtocolsBenchmarks>();
+// BenchmarkRunner.Run<ProtocolsBenchmarks>();
+
+using System.Net;
+
+using var client = new HttpClient
+{
+    DefaultRequestVersion =  HttpVersion.Version30,
+    DefaultVersionPolicy = HttpVersionPolicy.RequestVersionExact
+};
+
+Console.WriteLine("--- localhost:5001 ---");
+
+HttpResponseMessage resp = await client.GetAsync("https://localhost:5001/");
+string body = await resp.Content.ReadAsStringAsync();
+
+Console.WriteLine(
+    $"status: {resp.StatusCode}, version: {resp.Version}, " +
+    $"body: {body.Substring(0, Math.Min(100, body.Length))}");
