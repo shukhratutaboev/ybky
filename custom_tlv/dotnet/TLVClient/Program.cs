@@ -1,22 +1,22 @@
-﻿// using CustomTLV;
-// using CustomTLV.UDP;
+﻿using CustomTLV;
+using CustomTLV.TCP;
 
-// for (var i = 0; i < 1; i++)
-// {
-//     var client = new Client();
-//     await client.SendAsync(new Person
-//     {
-//         FirstName = "Jane",
-//         LastName = "Doe",
-//         Age = 30
-//     }, "127.0.0.2", 8080);
+for (var i = 0; i < 1; i++)
+{
+    var client = new Client("127.0.0.2", 8080);
+    await client.SendAsync(new Person
+    {
+        FirstName = "Jane",
+        LastName = "Doe",
+        Age = 30
+    });
 
-//     var person = await client.ReceiveAsync<Person>();
+    var person = await client.ReceiveAsync<Person>();
 
-//     Console.WriteLine($"Received person {i+1}: {person.FirstName} {person.LastName} ({person.Age})");
+    Console.WriteLine($"Received person {i+1}: {person.FirstName} {person.LastName} ({person.Age})");
 
-//     await client.CloseAsync();
-// }
+    await client.CloseAsync();
+}
 
 // HTTP
 
@@ -49,21 +49,4 @@
 // using BenchmarkDotNet.Running;
 // using TLVClient;
 
-// BenchmarkRunner.Run<ProtocolsBenchmarks>();
-
-using System.Net;
-
-using var client = new HttpClient
-{
-    DefaultRequestVersion =  HttpVersion.Version30,
-    DefaultVersionPolicy = HttpVersionPolicy.RequestVersionExact
-};
-
-Console.WriteLine("--- localhost:5001 ---");
-
-HttpResponseMessage resp = await client.GetAsync("https://localhost:5001/");
-string body = await resp.Content.ReadAsStringAsync();
-
-Console.WriteLine(
-    $"status: {resp.StatusCode}, version: {resp.Version}, " +
-    $"body: {body.Substring(0, Math.Min(100, body.Length))}");
+// BenchmarkRunner.Run<EncodersBenchmarks>();

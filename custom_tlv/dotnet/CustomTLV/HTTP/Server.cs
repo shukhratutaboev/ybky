@@ -1,16 +1,18 @@
 using System.Net;
 using System.Text;
 using System.Text.Json;
-using System;
+using CustomTLV.Encoders;
 
 namespace CustomTLV.HTTP;
 
 public class Server
 {
+    private readonly IEncoder _encoder;
     private readonly HttpListener _listener;
 
     public Server(string ip, int port)
     {
+        _encoder = new JsonEncoder();
         _listener = new HttpListener();
         _listener.Prefixes.Add($"http://{ip}:{port}/");
     }

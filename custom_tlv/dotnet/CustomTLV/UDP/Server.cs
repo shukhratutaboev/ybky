@@ -1,14 +1,17 @@
 using System.Net;
 using System.Net.Sockets;
+using CustomTLV.Encoders;
 
 namespace CustomTLV.UDP;
 
 public class Server
 {
+    private readonly IEncoder _encoder;
     private readonly UdpClient _client;
 
     public Server(string ip, int port)
     {
+        _encoder = new JsonEncoder();
         _client = new UdpClient(new IPEndPoint(IPAddress.Parse(ip), port));
     }
 
@@ -34,7 +37,7 @@ public class Server
     {
         var record = await TLV.ReadFromByteAsync(message);
 
-        var person = await TLV.DecodeAsync<Person>(record.Value);
+        var person = await _encoder.DecodeAsync<Person>(record.Value);
 
         Console.WriteLine($"Received person: {person.FirstName} {person.LastName} ({person.Age})");
 
@@ -45,7 +48,7 @@ public class Server
             Age = person.Age + 1
         };
 
-        var value = await TLV.EncodeAsync(response);
+        var value = await _encoder.EncodeAsync(response);
         var responseRecord = new TLVRecord(1, (ushort)value.Length, value);
 
         var responseMessage = await TLV.WriteToByteAsync(responseRecord);

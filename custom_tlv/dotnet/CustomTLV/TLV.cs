@@ -6,8 +6,6 @@ namespace CustomTLV;
 
 public static class TLV
 {
-    private static readonly BinaryFormatter _formatter = new();
-
     public static async Task<TLVRecord> ReadRecordAsync(NetworkStream stream)
     {
         var typeBuffer = new byte[1];
@@ -16,6 +14,7 @@ public static class TLV
         var lengthBuffer = new byte[2];
         _ = await stream.ReadAsync(lengthBuffer.AsMemory(0, 2));
         var length = BitConverter.ToUInt16(lengthBuffer, 0);
+        Console.WriteLine($"Type: {type}, Length: {length}");
         var value = new byte[length];
         _ = await stream.ReadAsync(value.AsMemory(0, length));
         return new TLVRecord(type, length, value);
@@ -50,18 +49,5 @@ public static class TLV
         var value = new byte[length];
         Array.Copy(data, 3, value, 0, length);
         return new TLVRecord(type, length, value);
-    }
-
-    public static async Task<byte[]> EncodeAsync<T>(T data)
-    {
-        using var stream = new MemoryStream();
-        _formatter.Serialize(stream, data);
-        return stream.ToArray();
-    }
-
-    public static async Task<T> DecodeAsync<T>(byte[] data)
-    {
-        using var stream = new MemoryStream(data);
-        return (T)_formatter.Deserialize(stream);
     }
 }
