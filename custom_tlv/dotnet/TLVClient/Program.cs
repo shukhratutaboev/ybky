@@ -1,22 +1,22 @@
-﻿using CustomTLV;
-using CustomTLV.TCP;
+﻿// using CustomTLV;
+// using CustomTLV.TCP;
 
-for (var i = 0; i < 1; i++)
-{
-    var client = new Client("127.0.0.2", 8080);
-    await client.SendAsync(new Person
-    {
-        FirstName = "Jane",
-        LastName = "Doe",
-        Age = 30
-    });
+// for (var i = 0; i < 1; i++)
+// {
+//     var client = new Client("127.0.0.2", 8080);
+//     await client.SendAsync(new Person
+//     {
+//         FirstName = "Jane",
+//         LastName = "Doe",
+//         Age = 30
+//     });
 
-    var person = await client.ReceiveAsync<Person>();
+//     var person = await client.ReceiveAsync<Person>();
 
-    Console.WriteLine($"Received person {i+1}: {person.FirstName} {person.LastName} ({person.Age})");
+//     Console.WriteLine($"Received person {i+1}: {person.FirstName} {person.LastName} ({person.Age})");
 
-    await client.CloseAsync();
-}
+//     await client.CloseAsync();
+// }
 
 // HTTP
 
@@ -46,7 +46,7 @@ for (var i = 0; i < 1; i++)
 //     client.Dispose();
 // }
 
-// using BenchmarkDotNet.Running;
-// using TLVClient;
+using BenchmarkDotNet.Running;
+using TLVClient;
 
-// BenchmarkRunner.Run<EncodersBenchmarks>();
+BenchmarkRunner.Run<EncodersBenchmarks>();
